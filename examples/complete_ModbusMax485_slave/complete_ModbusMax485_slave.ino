@@ -101,7 +101,9 @@ void loop()
   analogIn[1] = analogRead(ai2);
   analogIn[2] = analogRead(ai3);
   
-  modbusSlave.update();  // see if any modbus package was received from the master, this is a non blocking function
+  // See if any modbus package was received from the master. 
+  // This is a non blocking function since it uses the hardware serial port.
+  modbusSlave.update();
 
   // digital and analog outputs are written
   digitalWrite(do1, digitalOut[0]);
