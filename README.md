@@ -13,7 +13,7 @@ Example:
 
 See a complete example of a Modbus RTU slave implementation in the attached example.
 
- *  You can use the QModMaster program to simulate an Modbus RTU master, it's free software: https://sourceforge.net/projects/qmodmaster/
+ *  You can use the QModMaster program to simulate a Modbus RTU master, it's an excellent free software: https://sourceforge.net/projects/qmodmaster/
 
 The ModbusRTU library is a **simple** to use library that allows an arduino to act as a Modbus slave. It attempts to obscure all unnecessary parts of the protocol to provide a clean interface.
 
