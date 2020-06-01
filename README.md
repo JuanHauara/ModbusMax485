@@ -1,7 +1,8 @@
 # About
 Adapted with minor changes from https://github.com/norgor/ModbusRTU to work with MAX485 chip.
 
-Now you can specify the de_re_pin (driver enable/receiver enable pin) with the begin() sentence:
+Now you can specify the de_re_pin (driver enable/receiver enable pin) with the begin() sentence.
+You have to connect DE and RE together and then to the de_re_pin of your Arduino.
 
 Example: 
 ```c++ 
@@ -36,7 +37,7 @@ Slave ID's are supported, it is therefore possible to have multiple slaves on th
 * 5   - Write Single Coil
 * 6   - Write Single Holding Register
 * 15  - Write Multiple Coils
-* 16  - Write Multuple Holding Registers
+* 16  - Write Multiple Holding Registers
 
 ### Exception Functionality
 * Exception Response Codes
@@ -52,12 +53,13 @@ The class is a template class with one parameter called registerCount. The param
 
 ### Members
 ```c++ 
-   void begin(unsigned long baud, HardwareSerial *pHardwareSerial = &Serial, unsigned char slaveId = 1)
+   void begin(unsigned long baud, HardwareSerial *pHardwareSerial = &Serial, unsigned int de_re_pin, unsigned char slaveId = 1)
 ```
    The begin function sets up variables and configures the hardware serial class.
    * Parameters
       * baud: The baud rate the serial interface should run at.
       * pHardwareSerial: Pointer to a HardwareSerial instance. Defaults to &Serial.
+      * de_re_pin: Pin to control DE (driver enable) and RE (receiver enable) pins of the MAX485 chip. You have to connect DE and RE together and then to the de_re_pin of your Arduino. Defaults to 4.
       * slaveId: Slave ID to be used by this slave. Defaults to 1.
 
 
