@@ -13,31 +13,33 @@
 #define modbus_slave_id 28  // Slave address
 
 // 8 digital inputs
-#define di1 5
-#define di2 6
-#define di3 7
-#define di4 8
-#define di5 9
-#define di6 10
-#define di7 11
-#define di8 12
+#define di1 6
+#define di2 7
+#define di3 8
+#define di4 9
+#define di5 10
+#define di6 11
+#define di7 12
+#define di8 A7
 
 // 6 digital outputs
 #define do1 13
-#define do2 A3
-#define do3 A4
-#define do4 A5
-#define do5 A6
-#define do6 A7
+#define do2 A2
+#define do3 A3
+#define do4 A4
+#define do5 A5
+#define do6 A6
 
-// 3 analog inputs
+// 2 analog inputs
 #define ai1 A0
 #define ai2 A1
-#define ai3 A2
+
+// 1 analog output
+#define ao1 5
 
 bool digitalIn[8];          // 8 digital inputs
 bool digitalOut[6];         // 6 digital outputs
-unsigned int analogIn[3];   // 3 analog inputs
+unsigned int analogIn[2];   // 2 analog inputs
 unsigned int analogOut[1];  // 1 analog output
 
 ModbusMax485::ModbusMax485slave<19> modbusSlave;
@@ -60,29 +62,30 @@ void setup()
   pinMode(do5, OUTPUT);
   pinMode(do6, OUTPUT);
 
+  pinMode(ao1, OUTPUT);
+
   modbusSlave.begin(9600, &Serial, de_re_pin, modbus_slave_id);
 
-  modbusSlave.addDiscreteInput(&digitalIn[0], 0x1000);
-  modbusSlave.addDiscreteInput(&digitalIn[1], 0x1001);
-  modbusSlave.addDiscreteInput(&digitalIn[2], 0x1002);
-  modbusSlave.addDiscreteInput(&digitalIn[3], 0x1003);
-  modbusSlave.addDiscreteInput(&digitalIn[4], 0x1004);
-  modbusSlave.addDiscreteInput(&digitalIn[5], 0x1005);
-  modbusSlave.addDiscreteInput(&digitalIn[6], 0x1006);
-  modbusSlave.addDiscreteInput(&digitalIn[7], 0x1007);
+  modbusSlave.addDiscreteInput(&digitalIn[0], 1000);
+  modbusSlave.addDiscreteInput(&digitalIn[1], 1001);
+  modbusSlave.addDiscreteInput(&digitalIn[2], 1002);
+  modbusSlave.addDiscreteInput(&digitalIn[3], 1003);
+  modbusSlave.addDiscreteInput(&digitalIn[4], 1004);
+  modbusSlave.addDiscreteInput(&digitalIn[5], 1005);
+  modbusSlave.addDiscreteInput(&digitalIn[6], 1006);
+  modbusSlave.addDiscreteInput(&digitalIn[7], 1007);
   
-  modbusSlave.addCoil(&digitalOut[0],0x2000);
-  modbusSlave.addCoil(&digitalOut[1],0x2001);
-  modbusSlave.addCoil(&digitalOut[2],0x2002);
-  modbusSlave.addCoil(&digitalOut[3],0x2003);
-  modbusSlave.addCoil(&digitalOut[4],0x2004);
-  modbusSlave.addCoil(&digitalOut[5],0x2005);
+  modbusSlave.addCoil(&digitalOut[0], 2000);
+  modbusSlave.addCoil(&digitalOut[1], 2001);
+  modbusSlave.addCoil(&digitalOut[2], 2002);
+  modbusSlave.addCoil(&digitalOut[3], 2003);
+  modbusSlave.addCoil(&digitalOut[4], 2004);
+  modbusSlave.addCoil(&digitalOut[5], 2005);
 
-  modbusSlave.addInputRegister(&analogIn[0], 0x3000);
-  modbusSlave.addInputRegister(&analogIn[1], 0x3001);
-  modbusSlave.addInputRegister(&analogIn[2], 0x3002);
+  modbusSlave.addInputRegister(&analogIn[0], 3000);
+  modbusSlave.addInputRegister(&analogIn[1], 3001);
 
-  modbusSlave.addHoldingRegister(&analogOut[0], 0x4000);
+  modbusSlave.addHoldingRegister(&analogOut[0], 4000);
 }
 
 void loop() 
@@ -99,7 +102,6 @@ void loop()
   
   analogIn[0] = analogRead(ai1);
   analogIn[1] = analogRead(ai2);
-  analogIn[2] = analogRead(ai3);
   
   // See if any modbus package was received from the master. 
   // This is a non blocking function since it uses the hardware serial port.
@@ -113,5 +115,5 @@ void loop()
   digitalWrite(do5, digitalOut[4]);
   digitalWrite(do6, digitalOut[5]);
 
-  // do something with the analogOut[0] received from modbus master..
+  analogWrite(ao1, analogOut[0]);  // use the holding register to set the duty cycle of PWM signal in pin 5
 }
